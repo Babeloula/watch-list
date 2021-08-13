@@ -16,3 +16,9 @@ require("channels")
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 import 'bootstrap';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+document.addEventListener('turbolinks:load', () => {
+  AOS.init();
+});
