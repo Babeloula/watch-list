@@ -5,19 +5,27 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-puts 'Creating 100 movies from TMDB...'
+puts 'Creating 10 pokemons...'
+ids = (1..10).to_a
 
-tmdb = RestClient.get "https://api.themoviedb.org/3/movie/top_rated?api_key=eb0a13fea458d222eb5dcdd2e4d50618&language=fr-FR&page=1"
-movies = JSON.parse(tmdb)["results"].first(100)
-
-movies.each do |movie|
-  movie = Movie.new(
-    title: movie["title"],
-    overview: movie["overview"],
-    poster_url: "https://image.tmdb.org/t/p/w500/#{movie["poster_path"]}",
-    rating: movie["vote_average"]
-  )
-  movie.save!
+ids.each do |id|
+  puts id
+  api = RestClient.get "https://pokeapi.co/api/v2/pokemon/#{id}/"
+  poke = JSON.parse(api)
+  if poke["types"].count == 1
+    pokemon = Pokemon.new(
+      name: poke["name"],
+      type_one: poke["types"][0]["type"]["name"],
+      type_two: "N/A"
+    )
+  else
+    pokemon = Pokemon.new(
+      name: poke["name"],
+      type_one: poke["types"][0]["type"]["name"],
+      type_two: poke["types"][1]["type"]["name"]
+    )
+  end
+  pokemon.save!
 end
 
 puts 'Finished!'
